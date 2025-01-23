@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
@@ -7,7 +7,6 @@ import { useParams } from "next/navigation";
 import { useCart } from "../../context/CartContext";
 import Link from "next/link";
 import { toast } from "react-toastify";
-
 
 interface Product {
   id: number;
@@ -20,19 +19,15 @@ interface Product {
 }
 
 const Page: React.FC = () => {
-  
   const { id } = useParams() as { id: string };
 
-  
   const [product, setProduct] = useState<Product | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
- 
-  const { addToCart } = useCart(); 
+  const { addToCart } = useCart();
 
-  
   useEffect(() => {
     const fetchProduct = async () => {
       setLoading(true);
@@ -45,7 +40,9 @@ const Page: React.FC = () => {
         const data: Product = await res.json();
         setProduct(data);
 
-        const relatedRes = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}`);
+        const relatedRes = await fetch(
+          `/api/products`
+        );
         if (!relatedRes.ok) throw new Error("Failed to fetch related products");
 
         const relatedData: Product[] = await relatedRes.json();
@@ -80,12 +77,11 @@ const Page: React.FC = () => {
   }
 
   const handleAddToCart = () => {
-    addToCart(product as any); 
-    
- 
+    addToCart(product as any);
+
     toast.success(`${product.productName} has been added to your cart!`, {
       position: "top-right",
-      autoClose: 1000, 
+      autoClose: 1000,
     });
   };
 
@@ -143,7 +139,9 @@ const Page: React.FC = () => {
                 {item.productName}
               </h3>
               <p className="text-[14px] text-[#757575]">{item.description}</p>
-              <h4 className="text-[20px] font-medium mt-[10px]">₹ {item.price}</h4>
+              <h4 className="text-[20px] font-medium mt-[10px]">
+                ₹ {item.price}
+              </h4>
             </div>
           ))}
         </div>
