@@ -39,7 +39,7 @@ const Page: React.FC = () => {
       setError(null);
 
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/${id}`);
+        const res = await fetch(`/api/products/${id}`);
         if (!res.ok) throw new Error("Failed to fetch product data");
 
         const data: Product = await res.json();
