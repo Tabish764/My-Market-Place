@@ -24,13 +24,13 @@ const Page = () => {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`/api/products`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}`);
         if (!res.ok) {
           throw new Error("Failed to fetch products");
         }
         const data = await res.json();
         setProducts(data);
-        setFilteredProducts(data); // Initially, show all products
+        setFilteredProducts(data);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -40,21 +40,20 @@ const Page = () => {
     fetchProducts();
   }, []);
 
-  // Filter products whenever filters change
   useEffect(() => {
     let updatedProducts = [...products];
 
-    // Apply gender filter
     if (genderFilter.length > 0) {
       updatedProducts = updatedProducts.filter((product) =>
         genderFilter.includes(product.category)
       );
     }
 
-    // Apply price filter
     if (priceFilter) {
       if (priceFilter === "under2500") {
-        updatedProducts = updatedProducts.filter((product) => product.price <= 2500);
+        updatedProducts = updatedProducts.filter(
+          (product) => product.price <= 2500
+        );
       } else if (priceFilter === "2501to5000") {
         updatedProducts = updatedProducts.filter(
           (product) => product.price > 2500 && product.price <= 5000
@@ -65,22 +64,24 @@ const Page = () => {
     setFilteredProducts(updatedProducts);
   }, [genderFilter, priceFilter, products]);
 
-  // Pagination logic
   const indexOfLastProduct = currentPage * itemsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;
-  const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+  const currentProducts = filteredProducts.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct
+  );
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
 
-  // Handle gender filter change
   const handleGenderChange = (category) => {
     setGenderFilter((prev) =>
-      prev.includes(category) ? prev.filter((item) => item !== category) : [...prev, category]
+      prev.includes(category)
+        ? prev.filter((item) => item !== category)
+        : [...prev, category]
     );
   };
 
-  // Handle price filter change
   const handlePriceChange = (priceRange) => {
     setPriceFilter(priceRange === priceFilter ? null : priceRange);
   };
@@ -100,7 +101,9 @@ const Page = () => {
       )}
 
       <div className="pb-[30px]  flex justify-between">
-        <h1 className="font-medium text-[24px]">New ({filteredProducts.length})</h1>
+        <h1 className="font-medium text-[24px]">
+          New ({filteredProducts.length})
+        </h1>
         <div className="flex justify-between items-center gap-[25px]">
           <p className="text-[16px] text-center flex gap-2 items-center ">
             Hide Filters{" "}
@@ -116,8 +119,7 @@ const Page = () => {
         <div className="w-[260px]">
           <div className="justify-between ">
             <div className="max-w-[260px] flex-col flex justify-between">
-
-            <div className="text-[15px] w-full font-medium">
+              <div className="text-[15px] w-full font-medium">
                 <p className="mb-[14.59px]">Shoes</p>
                 <p className="mb-[14.59px]">Sports Bras</p>
                 <p className="mb-[14.59px]">Tops & T-Shirts</p>
@@ -131,7 +133,7 @@ const Page = () => {
                   Accessories <br />& Equipment
                 </p>
                 <hr className="w-[100%] mt-[40px]" />
-        </div>
+              </div>
               <div className="text-[15px] w-full font-medium">
                 {/* Gender Filter */}
                 <div className="flex pt-[28px] justify-between items-center">
@@ -141,7 +143,6 @@ const Page = () => {
                 <div className="flex pt-[21px] gap-[6px]">
                   <input
                     type="checkbox"
-                   
                     onChange={() => handleGenderChange("Men's Shoes")}
                   />
                   <p>Men</p>
@@ -149,7 +150,6 @@ const Page = () => {
                 <div className="flex pt-[4px] gap-[6px]">
                   <input
                     type="checkbox"
-                   
                     onChange={() => handleGenderChange("Women's Shoes")}
                   />
                   <p>Women</p>
@@ -185,7 +185,6 @@ const Page = () => {
                   <p>₹ 2 501.00 - ₹ 5 000.00</p>
                 </div>
               </div>
-              
             </div>
           </div>
         </div>
@@ -198,7 +197,9 @@ const Page = () => {
                 <Link href={`allproducts/${item.id}`}>
                   <Image src={item.imageUrl} width={348} height={348} alt="" />
                 </Link>
-                <p className="text-[15px] font-medium text-[#9E3500]">{item.status}</p>
+                <p className="text-[15px] font-medium text-[#9E3500]">
+                  {item.status}
+                </p>
                 <p>{item.name}</p>
                 <p className="text-[15px] text-[#757575]">{item.productName}</p>
                 <p className="text-[#757575] font-medium">{item.colors}</p>
@@ -210,7 +211,10 @@ const Page = () => {
           {/* Pagination */}
           <div className="flex justify-center gap-2 mt-4">
             {currentPage > 1 && (
-              <button onClick={() => paginate(currentPage - 1)} className="py-2 px-4 border rounded">
+              <button
+                onClick={() => paginate(currentPage - 1)}
+                className="py-2 px-4 border rounded"
+              >
                 Previous
               </button>
             )}
@@ -224,7 +228,10 @@ const Page = () => {
               </button>
             ))}
             {currentPage < totalPages && (
-              <button onClick={() => paginate(currentPage + 1)} className="py-2 px-4 border rounded">
+              <button
+                onClick={() => paginate(currentPage + 1)}
+                className="py-2 px-4 border rounded"
+              >
                 Next
               </button>
             )}

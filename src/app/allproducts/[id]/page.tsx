@@ -6,9 +6,9 @@ import cart from "../../../../public/Buy 2.png";
 import { useParams } from "next/navigation";
 import { useCart } from "../../context/CartContext";
 import Link from "next/link";
-import { toast } from "react-toastify"; // Import toast
+import { toast } from "react-toastify";
 
-// Define types
+
 interface Product {
   id: number;
   productName: string;
@@ -20,32 +20,32 @@ interface Product {
 }
 
 const Page: React.FC = () => {
-  // Explicitly type id from useParams
+  
   const { id } = useParams() as { id: string };
 
-  // State declarations
+  
   const [product, setProduct] = useState<Product | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Context usage
-  const { addToCart } = useCart(); // Assuming addToCart is properly typed
+ 
+  const { addToCart } = useCart(); 
 
-  // Fetch product details and related products
+  
   useEffect(() => {
     const fetchProduct = async () => {
       setLoading(true);
       setError(null);
 
       try {
-        const res = await fetch(`/api/products/${id}`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/${id}`);
         if (!res.ok) throw new Error("Failed to fetch product data");
 
         const data: Product = await res.json();
         setProduct(data);
 
-        const relatedRes = await fetch(`/api/products`);
+        const relatedRes = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}`);
         if (!relatedRes.ok) throw new Error("Failed to fetch related products");
 
         const relatedData: Product[] = await relatedRes.json();
