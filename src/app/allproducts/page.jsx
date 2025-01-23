@@ -24,7 +24,7 @@ const Page = () => {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`/api/products`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}`);
         if (!res.ok) {
           throw new Error("Failed to fetch products");
         }
