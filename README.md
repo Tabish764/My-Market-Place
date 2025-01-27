@@ -1,4 +1,4 @@
-# Shevoibe Market Place  
+# Shevibe Market Place  
 
 ## Project Overview  
 Shevoibe Market Place is a modern, user-friendly e-commerce platform designed to simplify online shopping.  
